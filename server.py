@@ -5,8 +5,9 @@ import socket
 inicio='''
 <html>
 <h1>Bienvenido al Server</h1>
-<button href="./login">Inicar Sesión</button>
-<button href="./register">Registrarme</button>
+<a href="./login">
+<button><a href="./login">Iniciar Sesion</a></button>
+<button><a href="./register">Registrarme</a></button>
 </html>
 '''
 
@@ -14,11 +15,11 @@ register='''
 <html>
 <h1>Login</h1>
 <form action="./login" method="post">
-<input type="email" placeholder="Email" required>
-<input type="text" placeholder="Nombre" required>
-<input type="text" placeholder="País" required>
-<input type="number" placeholder="Edad" required>
-<input type="password" placeholder="Password" required>
+<input type="email" placeholder="Email" required><br>
+<input type="text" placeholder="Nombre" required><br>
+<input type="text" placeholder="Pais" required><br>
+<input type="number" placeholder="Edad" required><br>
+<input type="password" placeholder="Password" required><br>
 <button>Registrarme</button>
 </html>
 '''
@@ -27,9 +28,9 @@ login='''
 <html>
 <h1>Login</h1>
 <form action="./perfil" method="post">
-<input type="email" placeholder="Email" required>
-<input type="password" placeholder="Password" required>
-<button>Inicar Sesión</button>
+<input type="email" placeholder="Email" required><br>
+<input type="password" placeholder="Password" required><br>
+<button>Inicar Sesion</button>
 </html>
 '''
 
@@ -40,7 +41,7 @@ perfil='''
 <h3>Nombre:{}</h3>
 <h3>País:{}<h3>
 <h3>Edad:{}</h3>
-<button href="./inicio">Cerrar sesión</button>
+<button><a href="./inicio">Cerrar Sesion</a></button>
 </html>
 '''
 
@@ -50,7 +51,7 @@ emailFalse='''
 <h1>Lo sentimos</h1>
 <h3>Al parecer, el correo que usted proporcionó no figura en la base de datos</h3>
 <h3>Porfavor, registrese pulsando el botón de abajo</h3>
-<button href="./register">Registrarme</button>
+<button><a href="./register">Registrarme</a></button>
 </html>
 '''
 
@@ -59,7 +60,7 @@ passwordFalse='''
 <h1>Lo sentimos</h1>
 <h3>Al parecer, la contraseña que usted introdujo no es correcta</h3>
 <h3>Porfavor, inicie sesión de nuevo pulsando el botón de abajo</h3>
-<button href="./login">Iniciar Sesión</button>
+<button><a href="./login">Iniciar Sesion</a></button>
 </html>
 '''
 
@@ -67,7 +68,7 @@ error='''
 <html>
 <h1>PARECE QUE HAS LLEGADO AL FINAL</h1>
 <h1>ERROR 404 NOT FOUND</h1>
-<button href="./inicio">Regresar</button>
+<button><a href="./inicio">Regresar</a></button>
 </html>
 '''
 
@@ -79,8 +80,50 @@ server.listen()
 print("Servidor abierto a la escucha de peticiones")
 
 
+#Creamos las respuestas del server
+ok='HTTP/1.1 200 Ok\r\n\r\n'
+error='HTTP /1.1 404 Not Found\r\n\r\n'+error
+
 
 #Iniciamos el bucle para aceptar clientes
 while True:
     conn,addr=server.accept()
     print("Nueva conexión desde",addr)
+
+    peticion=conn.recv(4096).decode()
+    peticion=peticion.split('\r\n')
+    
+    cabecera=peticion[0]
+    metodo=cabecera.split()[0]
+    recurso=cabecera.split()[1]
+
+    cuerpo=peticion[-1]
+
+    if metodo=='GET':
+        if recurso=='/login':
+            respuesta=ok+login
+            conn.sendall(respuesta.encode('utf-8'))
+        elif recurso=='/register':
+            respuesta=ok+register
+            conn.sendall(respuesta.encode('utf-8'))
+        elif recurso=='/' or recurso=="/inicio":
+            respuesta=ok+inicio
+            conn.sendall(respuesta.encode('utf-8'))
+    
+
+    conn.close()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
