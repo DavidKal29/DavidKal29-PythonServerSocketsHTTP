@@ -84,6 +84,15 @@ print("Servidor abierto a la escucha de peticiones")
 ok='HTTP/1.1 200 Ok\r\n\r\n'
 error='HTTP /1.1 404 Not Found\r\n\r\n'+error
 
+#Creamos e iniciamos la base de datos
+import sqlite3
+conexion=sqlite3.connect('server_users.sqlite3')
+cursor=conexion.cursor()
+cursor.execute('CREATE TABLE IF NOT EXISTS usuarios (email VARCHAR(100),nombre VARCHAR(100),\
+pais VARCHAR(75),edad INTEGER, password VARCHAR(100));')
+conexion.commit()
+
+
 
 #Iniciamos el bucle para aceptar clientes
 while True:
